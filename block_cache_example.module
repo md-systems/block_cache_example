@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Module file for block_cache_example.
+ */
+
+use Drupal\Core\Cache\Cache;
+
+/**
+ * Implements hook_cron().
+ */
+function block_cache_example_cron() {
+  $content = (string) \Drupal::httpClient()->get('https://filesamples.com/samples/code/json/sample4.json')->getBody();
+  if ($content != \Drupal::state()->get('block_cache_example_people', [])) {
+    \Drupal::state()->set('block_cache_example_people', $content);
+    Cache::invalidateTags(['block_cache_example_people']);
+  }
+}
